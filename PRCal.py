@@ -1,5 +1,5 @@
-from PyQt5.QtWidgets import QMainWindow, QApplication, QCalendarWidget, QLabel, QGroupBox, QPushButton,QTextBrowser, QLineEdit, QTableWidget, QTableWidgetItem
-from PyQt5 import uic
+from PyQt5.QtWidgets import QMainWindow, QApplication, QCalendarWidget, QLabel, QGroupBox, QPushButton,QTextBrowser, QLineEdit, QTableWidget, QTableWidgetItem, QCheckBox
+from PyQt5 import uic, QtCore
 import sys
 
 class PRCal(QMainWindow):
@@ -13,7 +13,7 @@ class PRCal(QMainWindow):
         uic.loadUi("PRCal.ui", self)
         
         #Define widgets  
-        self.events = {'2022-11-10': (['일일호프'], ['공운위', '학운위'])}                     
+        self.events = {'2022-11-10': ([ ['일일호프', False, False, False, False ],["거리문화제", False, True, True, False]  ], ['공운위', '학운위'])}                     
         self.calender = self.findChild(QCalendarWidget, "calendarWidget")
         self.newEventLine = self.findChild(QLineEdit, "lineEdit")
         self.addButton = self.findChild(QPushButton, "pushButton")
@@ -21,18 +21,17 @@ class PRCal(QMainWindow):
         self.dateLabel = self.findChild(QLabel, "data_label")
         self.fixedList = self.findChild(QTableWidget,"tableWidget" )
         self.waitingList = self.findChild(QTableWidget,"tableWidget_2" )
-        
+
         #Connect the calender to the function   
-        self.addButton.clicked.connect(self.addButton_click)
+        self.addButton.clicked.connect(self.addEvent)
         self.calender.clicked.connect(self.selectDate)
-        
-        
+
 
         #Show   
         self.show()
+    
 
-
-    def addButton_click(self):
+    def addEvent(self):
         
         # 입력값 추가 
         dateSelected = str(self.calender.selectedDate().toPyDate())
@@ -47,9 +46,14 @@ class PRCal(QMainWindow):
 
         print(self.events)
 
+    def add(self, date , newEvent):
+        
+        if date in self.events:
+            self.events[date][0].append( [newEvent,False, False, False, False  ]  )
 
-
-
+        else:
+            self.events[date] = ([],[])
+            self.events[date][0].append( [newEvent,False, False, False, False  ]  )   
 
 
     def selectDate(self):
@@ -70,16 +74,6 @@ class PRCal(QMainWindow):
         print(self.events)
     
 
-    def add(self, date , newEvent):
-
-        if date in self.events:
-            self.events[date][0].append(newEvent)
-
-        else:
-            self.events[date] = ([],[])
-            self.events[date][0].append(newEvent)
-        
-
     def updateLists(self, date):
         if date in self.events:
             row = 0 
@@ -87,17 +81,28 @@ class PRCal(QMainWindow):
             self.waitingList.setRowCount(len(self.events[date][0]))
             self.fixedList.setRowCount(len(self.events[date][1]))
             for e in self.events[date][0]:
-                self.waitingList.setItem(row, 0,  QTableWidgetItem(e ))
+                self.waitingList.setItem(row, 0,  QTableWidgetItem(e[0] ))
+                col = 1
+                for c in e[1:]:
+                    
+                    item = QTableWidgetItem("")
+                    item.setFlags(QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled)
+                    item.setCheckState(QtCore.Qt.Checked) if c == True else item.setCheckState(QtCore.Qt.Unchecked)
+                    self.waitingList.setItem(row, col, item)
+                    col += 1
+                
                 row += 1
             
             row = 0
             for e in self.events[date][1]:
-                self.fixedList.setItem(row, 0,  QTableWidgetItem(e ))
+                self.fixedList.setItem(row, 0,  QTableWidgetItem(e ) )
                 row += 1
 
         else: 
             self.waitingList.setRowCount(0)
             self.fixedList.setRowCount(0)
+
+
 
 
 if __name__ == "__main__":
