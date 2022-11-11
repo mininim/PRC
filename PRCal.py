@@ -4,8 +4,6 @@ import sys
 
 class PRCal(QMainWindow):
 
-    
-
     def __init__(self):
         super(PRCal, self).__init__()
         
@@ -21,11 +19,12 @@ class PRCal(QMainWindow):
         self.dateLabel = self.findChild(QLabel, "data_label")
         self.fixedList = self.findChild(QTableWidget,"tableWidget" )
         self.waitingList = self.findChild(QTableWidget,"tableWidget_2" )
+        self.confirmButton = self.findChild(QPushButton, "pushButton_2")
 
         #Connect the calender to the function   
         self.addButton.clicked.connect(self.addEvent)
         self.calender.clicked.connect(self.selectDate)
-
+        self.confirmButton.clicked.connect(self.confirm)
 
         #Show   
         self.show()
@@ -73,7 +72,6 @@ class PRCal(QMainWindow):
         #for testing  events
         print(self.events)
     
-
     def updateLists(self, date):
         if date in self.events:
             row = 0 
@@ -102,6 +100,34 @@ class PRCal(QMainWindow):
             self.waitingList.setRowCount(0)
             self.fixedList.setRowCount(0)
 
+    def confirm(self):
+        dateSelected = str(self.calender.selectedDate().toPyDate())
+        
+        for row in range( len(self.events[dateSelected][0] )  ):
+            
+            numOfconfirms = 0 
+            
+            for col in range(1, 5):
+
+                if self.waitingList.item(row,col).checkState() == QtCore.Qt.CheckState.Checked:
+                    self.events[dateSelected][0][row][col] = True
+                    numOfconfirms += 1
+                else:
+                    self.events[dateSelected][0][row][col] = False
+        
+            
+            if numOfconfirms >= 4 : # 모두 컨펌 받은 일정은 fixed list로 올리기 
+                self.waitingToFixed(dateSelected ,row)
+                print("오예 fixed 로 올리자!")
+
+
+        self.updateLists(dateSelected)
+
+
+    def waitingToFixed(self, dateSelected ,index):
+        confirmedEvent = self.events[dateSelected][0][index][0]
+        del self.events[dateSelected][0][index]
+        self.events[dateSelected][1].append(confirmedEvent)
 
 
 
