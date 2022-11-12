@@ -11,7 +11,7 @@ class PRCal(QMainWindow):
         uic.loadUi("PRCal.ui", self)
         
         #Define widgets  
-        self.events = {'2022-11-10': ([ ['일일호프', False, False, False, False ],["거리문화제", False, True, True, False]  ], ['공운위', '학운위'])}                     
+        self.events = {'2022-11-10': ([ ['소프트 일일호프', False, False, False, False ],["거리문화제", False, True, True, False] ,["푸드트럭", True, True, True, False] , ["엔젤스캠프", True, True, True, False]  ], ['공운위', '학운위'])}                     
         self.calender = self.findChild(QCalendarWidget, "calendarWidget")
         self.newEventLine = self.findChild(QLineEdit, "lineEdit")
         self.addButton = self.findChild(QPushButton, "pushButton")
@@ -102,8 +102,10 @@ class PRCal(QMainWindow):
 
     def confirm(self):
         dateSelected = str(self.calender.selectedDate().toPyDate())
-        
-        for row in range( len(self.events[dateSelected][0] )  ):
+        initialrange = range( len(self.events[dateSelected][0] )  )
+        row = 0
+
+        for _ in initialrange:
             
             numOfconfirms = 0 
             
@@ -118,11 +120,13 @@ class PRCal(QMainWindow):
             
             if numOfconfirms >= 4 : # 모두 컨펌 받은 일정은 fixed list로 올리기 
                 self.waitingToFixed(dateSelected ,row)
-                print("오예 fixed 로 올리자!")
+                print("오예 fixed 로 올리자! --- ", row)
+                self.updateLists(dateSelected)
+            else :
+                row += 1
+                print("좀 더 대기해 --- ", row)
 
-
-        self.updateLists(dateSelected)
-
+        
 
     def waitingToFixed(self, dateSelected ,index):
         confirmedEvent = self.events[dateSelected][0][index][0]

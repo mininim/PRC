@@ -38,9 +38,9 @@
     <property name="geometry">
      <rect>
       <x>250</x>
-      <y>500</y>
+      <y>495</y>
       <width>91</width>
-      <height>16</height>
+      <height>21</height>
      </rect>
     </property>
     <property name="font">
@@ -71,9 +71,9 @@
     <property name="geometry">
      <rect>
       <x>530</x>
-      <y>260</y>
+      <y>255</y>
       <width>121</width>
-      <height>16</height>
+      <height>21</height>
      </rect>
     </property>
     <property name="font">
@@ -89,9 +89,9 @@
     <property name="geometry">
      <rect>
       <x>100</x>
-      <y>500</y>
+      <y>499</y>
       <width>121</width>
-      <height>20</height>
+      <height>21</height>
      </rect>
     </property>
     <property name="font">
@@ -165,22 +165,22 @@
     </column>
     <column>
      <property name="text">
-      <string>컨펌1</string>
+      <string>확인1</string>
      </property>
     </column>
     <column>
      <property name="text">
-      <string>컨펌2</string>
+      <string>확인2</string>
      </property>
     </column>
     <column>
      <property name="text">
-      <string>컨펌3</string>
+      <string>확인3</string>
      </property>
     </column>
     <column>
      <property name="text">
-      <string>컨펌4</string>
+      <string>확인4</string>
      </property>
     </column>
    </widget>
@@ -201,7 +201,7 @@
      </font>
     </property>
     <property name="text">
-     <string>confirm!!</string>
+     <string>저장</string>
     </property>
    </widget>
   </widget>
